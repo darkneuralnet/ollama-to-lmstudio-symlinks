@@ -108,6 +108,10 @@ func runApp(args []string, stdin io.Reader) error {
 		deleteDryRun := deleteFs.Bool("dry-run", *dryRun, "Show what would be deleted without actually removing them")
 		deleteVerbose := deleteFs.Bool("verbose", *verbose, "Enable verbose output")
 		
+		// Re-bind global flags to deleteFs so they can be parsed after the subcommand
+		deleteFs.StringVar(ollamaDir, "ollama-dir", *ollamaDir, "Path to Ollama models directory")
+		deleteFs.StringVar(lmstudioDir, "lmstudio-dir", *lmstudioDir, "Path to LM Studio models directory")
+		
 		if err := deleteFs.Parse(remainingArgs[1:]); err != nil {
 			return err
 		}
@@ -150,6 +154,9 @@ func runApp(args []string, stdin io.Reader) error {
 			
 			cleanupDryRun := cleanupFs.Bool("dry-run", *dryRun, "Show what would be deleted without actually removing them")
 			cleanupVerbose := cleanupFs.Bool("verbose", *verbose, "Enable verbose output")
+			
+			// Re-bind global flags to cleanupFs so they can be parsed after the subcommand
+			cleanupFs.StringVar(lmstudioDir, "lmstudio-dir", *lmstudioDir, "Path to LM Studio models directory")
 			
 			if err := cleanupFs.Parse(remainingArgs[1:]); err != nil {
 				return err
